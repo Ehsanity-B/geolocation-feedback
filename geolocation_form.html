@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Feedback Form with Geolocation</title>
+  <script>
+    // Function to get the user's location
+    function getLocation() {
+      if (navigator.geolocation) {
+        // Request the user's current position
+        navigator.geolocation.getCurrentPosition(sendLocation, showError, {
+          enableHighAccuracy: true,
+          timeout: 10000, // 10 seconds
+          maximumAge: 0,
+        });
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
+    }
+
+    // Function to process and send the location to the Google Form
+    function sendLocation(position) {
+      // Extract latitude and longitude
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      // Base URL of the Google Form
+      const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc55zdBGdr1NQ51vbBw20Pa4Tg-Ilew_rBPXy3gNRZg89HOCQ/viewform?usp=header";
+
+      // Replace entry IDs with the IDs for the latitude and longitude fields in your form
+      const prefillUrl = `${formUrl}?usp=pp_url&entry.2096165297=${lat}&entry.1177954869=${lon}`;
+
+      console.log("Redirecting to:", prefillUrl);
+      window.location.href = prefillUrl; // Redirect the user to the pre-filled form
+    }
+
+    // Function to handle geolocation errors
+    function showError(error) {
+      let message = "An unknown error occurred.";
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          message = "User denied the request for Geolocation.";
+          break;
+        case error.POSITION_UNAVAILABLE:
+          message = "Location information is unavailable.";
+          break;
+        case error.TIMEOUT:
+          message = "The request to get user location timed out.";
+          break;
+      }
+      console.error("Geolocation Error:", message);
+      alert(message);
+    }
+  </script>
+</head>
+<body onload="getLocation()">
+  <h3>Retrieving your location...</h3>
+</body>
+</html>
